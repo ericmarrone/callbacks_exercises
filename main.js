@@ -129,26 +129,10 @@ console.log( 'The total number of transactions is:', totalTransactions );
   HINT(S):
   - Not all transactions are 'sales'.
 */
-var numSales;
 
-/*
-  Hey, welcome to the first question!
+var salesTransactions = transactions.filter(transaction => transaction['type'] === 'sale');
+var numSales = salesTransactions.length
 
-  Here's a breakdown of the question, and some pointers on how to get started!
-    - A variable has been declared a few lines above (`numSales`).
-    - Just below, the contents of the `numSales` variable are logged to the console.
-    - Your job is to assign the variable to the correct value (in this case: the total number of sales) *BEFORE* it is logged out.
-    - You can do this by:
-      - Adding an `=` sign (we are *assigning* something after all)
-      - Starting with the `transactions` variable (see the example question);
-      - Adding one or more methods to transform/extract the value we're looking for.
-      - If your solution is correct, `numSales` should be equal to 5.
-
-  You can solve the remaining questions in the same way!
-
-  P.S.
-  The breakdown above takes up a lot of space, feel free to move it to the top or bottom of the file!
-*/
 
 console.log( 'The total number of sales is:', numSales );
 
@@ -159,7 +143,8 @@ console.log( 'The total number of sales is:', numSales );
 /*
   Calculate the total number of 'purchases'.
 */
-var numPurchases;
+var purchaseTransactions = transactions.filter(transaction => transaction['type'] === 'purchase')
+var numPurchases = purchaseTransactions.length ;
 
 console.log( 'The total number of purchases is:', numPurchases );
 
@@ -173,7 +158,8 @@ console.log( 'The total number of purchases is:', numPurchases );
   HINT(S):
   - Don't forget that 'purchases' can also be made in 'cash'!
 */
-var numCashSales;
+var numCashSales = salesTransactions.filter(transaction => transaction['paymentMethod'] === 'cash').length ;
+
 
 console.log( 'The total number of cash sales is:', numCashSales );
 
@@ -187,7 +173,7 @@ console.log( 'The total number of cash sales is:', numCashSales );
   HINT(S):
   - Make sure to exclude any 'sales' made by 'credit'!
 */
-var numCreditPurchases;
+var numCreditPurchases = purchaseTransactions.filter(transaction => transaction['paymentMethod'] === 'credit').length;
 
 console.log( 'The total number of credit purchases is:', numCreditPurchases );
 
@@ -204,7 +190,9 @@ console.log( 'The total number of credit purchases is:', numCreditPurchases );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - This array is allowed to contain duplicate values.
 */
-var uniqueVendors;
+var uniqueVendors = transactions
+                      .filter(transaction => transaction.vendor)
+                      .map(transaction => transaction.vendor);
 
 console.log( 'The unique vendors are:', uniqueVendors );
 
@@ -221,7 +209,15 @@ console.log( 'The unique vendors are:', uniqueVendors );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - Make sure that the resulting array *does not* include any duplicates.
 */
-var uniqueCustomers;
+var uniqueCustomers = transactions
+                      .filter(transaction => transaction.customer)
+                      .map(transaction => transaction.customer)
+                      .filter(onlyUnique);
+
+
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
 
 console.log( 'The unique customers are:', uniqueCustomers );
 
@@ -239,7 +235,10 @@ console.log( 'The unique customers are:', uniqueCustomers );
   - There may be more than 1 'sale' that includes 5 or more items.
   - Individual transactions do not have either `name` or `numItems` properties, we'll have to add them to the output.
 */
-var bigSpenders;
+var bigSpenders = salesTransactions
+                    .filter(transaction => transaction.items.length >= 5)
+                    // .map(transaction => {return {name: transaction.customer, numItems: transaction.items.length}});
+                    .map(function(transaction) {return {name: transaction.customer, numItems: transaction.items.length}});
 
 console.log( 'The "big spenders" are:', bigSpenders );
 
