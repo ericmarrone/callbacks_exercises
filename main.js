@@ -252,7 +252,8 @@ console.log( 'The "big spenders" are:', bigSpenders );
   HINT(S):
   - Transactions don't have 'prices', but their 'items' do!
 */
-var sumSales;
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
+var sumSales = transactions[0]['items'].map(item => item.price).reduce(reducer);
 
 console.log( 'The sum of all sales is:', sumSales );
 
@@ -267,9 +268,18 @@ console.log( 'The sum of all sales is:', sumSales );
   - Your solution to 'QUESTION 08' is a good starting point!
   - Make sure to include 'price' information from *all* purchases.
 */
+var sumEachPurchase = []
 
-var sumPurchases;
+var addItemPrice = function(transaction) {
+  var sumTransaction = transaction.items.map(item => item.price).reduce(reducer);
+  sumEachPurchase.push(sumTransaction);
+}
 
+purchaseTransactions.forEach(function(transaction) {
+    addItemPrice(transaction);
+});
+
+var sumPurchases = sumEachPurchase.reduce((a, b) => a + b, 0);
 console.log( 'The sum of all purhcases is:', sumPurchases );
 
 
@@ -286,8 +296,19 @@ console.log( 'The sum of all purhcases is:', sumPurchases );
   HINT(S):
   - Unlike 'QUESTION 08' and 'QUESTION 09', here we're interested in both 'sale' and 'purchase' transactions.
 */
-var netProfit;
 
+var sumEachTransaction = []
+
+var addTransactionPrices = function(transaction) {
+  var sumTransaction = transaction.items.map(item => item.price).reduce(reducer);
+  sumEachTransaction.push(sumTransaction)
+}
+
+transactions.forEach(function(transaction) {
+    addTransactionPrices(transaction);
+});
+
+var netProfit = sumEachTransaction.reduce((a, b) => a + b, 0);
 console.log( 'The net profit is:', netProfit );
 
 
@@ -300,7 +321,13 @@ console.log( 'The net profit is:', netProfit );
   HINTS:
   - The result of this calculation should be a number (not an array, object, or other data type).
 */
-var mostItems;
+var itemsSoldEach = []
+transactions.forEach(function(transaction) {
+    itemsSoldEach.push(transaction.items.length)
+});
+var mostItems = itemsSoldEach.reduce(function(a, b) {
+    return Math.max(a, b);
+});
 
 console.log( 'The most items sold in a single transaction is:', mostItems );
 
@@ -311,6 +338,10 @@ console.log( 'The most items sold in a single transaction is:', mostItems );
 /*
   Calculate the sum of the 'purchase' with the fewest items.
 */
-var sumOfSmallestPurchase;
 
+var sortPurchases = purchaseTransactions.sort(function (a, b) {
+  return a.items.length - b.items.length;
+});
+
+var sumOfSmallestPurchase = sortPurchases[0].items.map(item => item.price).reduce((a, b) => a + b, 0);
 console.log( 'The sum of the smallest purchase is:', sumOfSmallestPurchase );
